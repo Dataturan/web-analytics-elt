@@ -1,0 +1,6 @@
+# Pinned to versions tested together on Python 3.13
+google-analytics-data==0.23.3
+google-cloud-bigquery==3.46.2
+feedparser==6.0.14
+python-dotenv==1.2.4
+dbt-bigquery==1.12.1

@@ -1,0 +1,36 @@
+# Secrets: never commit these
+.env
+*.json
+!dbt/**/*.json
+credentials/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+.pytest_cache/
+.ruff_cache/
+
+# dbt
+dbt/target/
+dbt/dbt_packages/
+dbt/logs/
+dbt/profiles.yml
+
+# Airflow (local)
+airflow/logs/
+airflow/airflow.db
+airflow/airflow.cfg
+airflow/standalone_admin_password.txt
+airflow/webserver_config.py
+
+# Data exports
+data/
+*.csv
+*.parquet
+
+# Editors and OS
+.vscode/
+.idea/
+.DS_Store
