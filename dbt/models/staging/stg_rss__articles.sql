@@ -1,5 +1,5 @@
 -- One row per article: the most recent version seen in the daily snapshots or the archive.
--- The first category in the feed is the WordPress category, the rest are tags.
+-- categories holds the WordPress categories and tags of the article, as listed in the feed.
 
 with all_snapshots as (
     select * from {{ source('raw', 'rss_articles') }}
@@ -23,7 +23,7 @@ select
     url,
     title,
     author,
-    categories[safe_offset(0)] as primary_category,
+    categories,
     published_at,
     extracted_at               as last_seen_at
 from ranked
