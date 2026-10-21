@@ -1,0 +1,34 @@
+version: 2
+
+models:
+  - name: dim_date
+    columns:
+      - name: date_key
+        data_tests: [unique, not_null]
+
+  - name: dim_page
+    columns:
+      - name: page_path
+        data_tests: [unique, not_null]
+      - name: page_type
+        data_tests:
+          - accepted_values:
+              arguments:
+                values: ["article", "home", "other"]
+
+  - name: fct_page_views
+    columns:
+      - name: date_key
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_date')
+                field: date_key
+      - name: page_path
+        data_tests:
+          - not_null
+          - relationships:
+              arguments:
+                to: ref('dim_page')
+                field: page_path
