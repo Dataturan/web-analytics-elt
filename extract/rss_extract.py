@@ -156,11 +156,13 @@ def collect_history(feed_url: str, delay_seconds: float, max_pages: int, fetch=f
         log.warning("Stopped at the safety limit of %d pages", max_pages)
     return list(seen.values())
 
+SITEMAP_LOC = "{http://www.sitemaps.org/schemas/sitemap/0.9}loc"
+
 
 def sitemap_locs(xml_text: str) -> list[str]:
-    """All <loc> values in a sitemap or sitemap index, whatever the namespace."""
+    """<loc> values in a sitemap. Images are skipped"""
     root = ET.fromstring(xml_text)
-    return [el.text.strip() for el in root.iter() if el.tag.endswith("loc") and el.text]
+    return [el.text.strip() for el in root.iter() if el.tag == SITEMAP_LOC and el.text]
 
 
 def fetch_text(url: str) -> str:
