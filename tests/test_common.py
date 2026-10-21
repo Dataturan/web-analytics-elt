@@ -20,6 +20,7 @@ from extract.common import normalize_path
 def test_normalize_path(raw, expected):
     assert normalize_path(raw) == expected
 
+
 def test_ga4_and_rss_paths_match():
     """The join key must be identical from ga4 and rss it comes from."""
     assert normalize_path("/economy/central-bank-holds-rates/") == normalize_path(
