@@ -1,9 +1,10 @@
--- GA4 traffic with clean names. One row per day, page, source, medium, channel and device.
+-- GA4 traffic with clean names. One row per day, hour, page, source, medium, channel and device.
 -- Different raw URLs of the same page (for example with ?utm tags) are added together here,
 -- so each cleaned page path appears once per combination.
 
 select
     report_date,
+    report_hour,
     coalesce(page_path_normalized, '(not set)')        as page_path,
     coalesce(nullif(source, ''), '(not set)')          as source,
     coalesce(nullif(medium, ''), '(not set)')          as medium,
@@ -15,4 +16,4 @@ select
     sum(engagement_seconds)                            as engagement_seconds,
     max(loaded_at)                                     as loaded_at
 from {{ source('raw', 'ga4_page_traffic') }}
-group by 1, 2, 3, 4, 5, 6
+group by 1, 2, 3, 4, 5, 6, 7

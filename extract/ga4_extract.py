@@ -5,7 +5,7 @@ Two modes:
   python -m extract.ga4_extract                              last 3 days (daily run)
   python -m extract.ga4_extract --backfill-from 2026-06-01   every day since that date
 
-One row per day, page, traffic source and device. Each day is loaded into its
+One row per day, hour, page, traffic source and device. Each day is loaded into its
 own partition and replaces what was there, so re-running a day never doubles it.
 The daily run re-fetches the last few days because GA4 keeps revising them.
 """
@@ -31,6 +31,7 @@ TABLE = "ga4_page_traffic"
 
 DIMENSIONS = [
     "date",
+    "hour",
     "pagePath",
     "sessionSource",
     "sessionMedium",
@@ -61,6 +62,7 @@ def bq_schema():
 
     return [
         SchemaField("report_date", "DATE", mode="REQUIRED"),
+        SchemaField("report_hour", "INT64"),
         SchemaField("page_path", "STRING"),
         SchemaField("page_path_normalized", "STRING"),
         SchemaField("source", "STRING"),
@@ -108,6 +110,8 @@ def to_records(rows, loaded_at: datetime) -> list[dict]:
         for name, value in zip(DIMENSIONS, dims, strict=True):
             if name == "date":  # GA4 sends 20261014, BigQuery wants 2026-10-14
                 record["report_date"] = f"{value[:4]}-{value[4:6]}-{value[6:]}"
+            elif name == "hour":  # GA4 sends "00" to "23"
+                record["report_hour"] = int(value)
             else:
                 record[COLUMN_NAMES[name]] = value
         for name, value in zip(METRICS, mets, strict=True):
